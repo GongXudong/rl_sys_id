@@ -1,0 +1,16 @@
+.vscode
+__pycache__
+_build/
+build/
+*.egg-info
+dist/
+
+algorithms/tryings/
+logs/
+checkpoints/
+results/
+wandb/
+
+*.pyc
+*.pyo
+*.pyd

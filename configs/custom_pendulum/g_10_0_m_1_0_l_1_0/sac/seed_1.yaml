@@ -1,0 +1,27 @@
+env:
+  id: CustomPendulum-v0
+  config:
+    g: 10.0
+    m: 1.0
+    l: 1.0
+algo:
+  experiment_name: custom_pendulum/sac/g_10_0_m_1_0_l_1_0/seed_1
+  seed: 3
+  seed_in_training_env: 7
+  seed_in_callback_env: 8
+  net_arch: [256, 256]
+  gamma: 0.99
+  train_steps: !!float 2e5
+  batch_size: 256
+  buffer_size: !!float 2e5
+  learning_starts: 1024
+  rollout_process_num: 1
+  evaluate_process_num: 8
+  callback_process_num: 8
+  gradient_steps: 1
+  learning_rate: !!float 3e-4
+  eval_freq: !!float 5e3
+  n_eval_episodes: 96
+  save_checkpoint_every_n_timesteps: 40000
+  use_her: false
+  device: cpu

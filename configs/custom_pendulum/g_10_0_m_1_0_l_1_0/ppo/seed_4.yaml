@@ -1,0 +1,28 @@
+env:
+  id: CustomPendulum-v0
+  config:
+    g: 10.0
+    m: 1.0
+    l: 1.0
+algo:
+  experiment_name: custom_pendulum/g_10_0_m_1_0_l_1_0/ppo/seed_4
+  seed: 33
+  seed_in_training_env: 36
+  seed_in_callback_env: 39
+  train_steps: !!float 1e7
+  net_arch: [256, 256]
+  gamma: 0.95
+  batch_size: 256
+  n_steps: 256
+  n_epochs: 5
+  ent_coef: 0.0
+  use_sde: true
+  learning_rate: !!float 3e-4
+  rollout_process_num: 16
+  evaluate_process_num: 8
+  callback_process_num: 8
+  evaluate_frequence: 10000  # 多少次env.step()评估一次，如果设置为1000，且VecEnv有72个并行环境，所以实际相当于72*1000次step，评估一次
+  evaluate_nums_in_evaluation: 30  # 使用evaluate_nums_in_evaluation * evaluate_process_num个episodes评估策略
+  evaluate_nums_in_callback: 3  # 使用evaluate_nums_in_callback * evaluate_process_num个episodes评估策略
+  save_checkpoint_every_n_timesteps: !!float 1e6
+  device: cpu
