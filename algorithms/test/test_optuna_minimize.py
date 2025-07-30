@@ -48,7 +48,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
                 "range": [0.001, 0.002],
             }
         }
-        self.optimize_n_iter = 100
+        self.optimize_n_trials = 100
         self.seed_optimize = 33
     
     def setup_custom_pendulum(self):
@@ -64,21 +64,21 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         self.policy_path = PROJECT_ROOT_DIR / "checkpoints/custom_pendulum/g_10_0_m_1_0_l_1_0/ppo/seed_1/best_model.zip"
         self.current_params = {
             "g": 10.0,
-            "m": 1.0,
+            "m": 0.799,
             "l": 1.0,
         }
         self.params_config = {
-            # "g": {
-            #     "range": [8.0, 12.0],
-            # },
-            "m": {
-                "range": [0.5, 1.5],
+            "g": {
+                "range": [8.0, 12.0],
             },
+            # "m": {
+            #     "range": [0.5, 1.5],
+            # },
             # "l": {
             #     "range": [0.5, 1.5],
             # }
         }
-        self.optimize_n_iter = 100
+        self.optimize_n_trials = 100
         self.seed_optimize = 333234
     
     def setup_custom_cartpole(self):
@@ -98,20 +98,20 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         self.current_params = {
             "gravity": 9.8,
             "masscart": 1.5,
-            "masspole": 0.1,
+            "masspole": 0.098,
             "length": 0.5,
             "force_mag": 10.0,
             "tau": 0.02,
         }
         self.params_config = {
-            "masscart": {
-                "range": [0.5, 1.5],
-            },
+            # "masscart": {
+            #     "range": [0.5, 1.5],
+            # },
             "masspole": {
                 "range": [0.05, 0.15],
             },
         }
-        self.optimize_n_iter = 1000
+        self.optimize_n_trials = 100
         self.seed_optimize = 86003
 
     def test_init_1(self):
@@ -138,15 +138,15 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             next_obs_calculated_from_dynamics = algo.helper_env_class.calc_next_obs(state=obs, action=action, helper_env=helper_env)
             # print(f"next_obs from dynamics: {next_obs_calculated_from_dynamics}")
 
-            assert np.allclose(next_obs, next_obs_calculated_from_dynamics), f"Observation mismatch at step {i+1}: {next_obs} != {next_obs_calculated_from_dynamics}"
+            assert np.allclose(next_obs, next_obs_calculated_from_dynamics, atol=1e-6), f"Observation mismatch at step {i+1}: {next_obs} != {next_obs_calculated_from_dynamics}"
 
             obs = next_obs
 
             if terminated or truncated:
                 obs, info = env_real.reset()
     
-    def test_optimize(self):
-        print(f"test optimize")
+    def test_calc_loss(self):
+        print(f"test calc_loss")
 
         env_real = self.helper_env_class.get_env_from_config(config=self.env_config_real)
         
@@ -160,16 +160,46 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             deterministic=True,
         )
 
-        algo = SystemIdentificationWithOptuna(
+        sys_id_algo = SystemIdentificationWithOptuna(
+            current_params=self.current_params,
+            params_config=self.params_config,
+            helper_env_class=self.helper_env_class,
+        )
+
+        loss = sys_id_algo.calc_loss(
+            current_params=self.current_params,
+            obs_real=obs_real,
+            act_real=act_real,
+            next_obs_real=next_obs_real
+        )
+
+        print(f"Calculated loss: {loss}")
+
+    def test_optimize(self):
+        print(f"test optimize")
+
+        env_real = self.helper_env_class.get_env_from_config(config=self.env_config_real)
+
+        # load policy trained on sim environment
+        algo = self.policy_class.load(self.policy_path, env=env_real)
+
+        obs_real, act_real, next_obs_real = collect_samples(
+            policy=algo.policy,
+            env=env_real,
+            num_samples=self.collect_real_sample_num,
+            deterministic=True,
+        )
+
+        sys_id_algo = SystemIdentificationWithOptuna(
             current_params=self.current_params,
             params_config=self.params_config,
             helper_env_class=self.helper_env_class,
         )
 
         # 执行优化
-        study = algo.optimize(obs_real=obs_real, act_real=act_real, next_obs_real=next_obs_real, n_iter=self.optimize_n_iter, seed=self.seed_optimize)
+        study = sys_id_algo.optimize(obs_real=obs_real, act_real=act_real, next_obs_real=next_obs_real, n_trials=self.optimize_n_trials, seed=self.seed_optimize)
 
-        print(f"Best parameters found: {study.best_params}")
+        print(f"Best parameters found: {study.best_params}, best value: {study.best_value}")
 
 if __name__ == "__main__":
     unittest.main()

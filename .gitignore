@@ -6,10 +6,12 @@ build/
 dist/
 
 algorithms/tryings/
+envs/tryings/
 logs/
 checkpoints/
 results/
 wandb/
+data/
 
 *.pyc
 *.pyo
