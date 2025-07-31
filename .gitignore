@@ -11,7 +11,7 @@ logs/
 checkpoints/
 results/
 wandb/
-data/
+data/*/*.npy
 
 *.pyc
 *.pyo
