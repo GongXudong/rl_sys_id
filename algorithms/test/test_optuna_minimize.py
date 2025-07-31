@@ -28,8 +28,8 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         super().setUp()
 
         # self.setup_custom_mountain_car()
-        # self.setup_custom_pendulum()
-        self.setup_custom_cartpole()
+        self.setup_custom_pendulum()
+        # self.setup_custom_cartpole()
     
     def setup_custom_mountain_car(self):
         self.env_config_real = {
@@ -49,36 +49,38 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             }
         }
         self.optimize_n_trials = 100
+        self.n_jobs=-1
         self.seed_optimize = 33
     
     def setup_custom_pendulum(self):
         self.env_config_real = {
-            "g": 8.0,
-            "m": 1.0,
-            "l": 1.0,
+            "g": 9.5,
+            "m": 0.9,
+            "l": 1.2,
         }
         self.env_id = "CustomPendulum-v0"
-        self.collect_real_sample_num = 10000
+        self.collect_real_sample_num = 1000
         self.helper_env_class = CustomPendulumEnv
         self.policy_class = PPO
         self.policy_path = PROJECT_ROOT_DIR / "checkpoints/custom_pendulum/g_10_0_m_1_0_l_1_0/ppo/seed_1/best_model.zip"
         self.current_params = {
-            "g": 10.0,
-            "m": 0.799,
-            "l": 1.0,
+            "g": 9.8,
+            "m": 0.8,
+            "l": 1.1,
         }
         self.params_config = {
             "g": {
-                "range": [8.0, 12.0],
+                "range": [9.0, 10.0],
             },
-            # "m": {
-            #     "range": [0.5, 1.5],
-            # },
-            # "l": {
-            #     "range": [0.5, 1.5],
-            # }
+            "m": {
+                "range": [0.8, 1.2],
+            },
+            "l": {
+                "range": [0.7, 1.3],
+            }
         }
         self.optimize_n_trials = 100
+        self.n_jobs=16
         self.seed_optimize = 333234
     
     def setup_custom_cartpole(self):
@@ -112,6 +114,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             },
         }
         self.optimize_n_trials = 100
+        self.n_jobs=-1
         self.seed_optimize = 86003
 
     def test_init_1(self):
@@ -197,7 +200,14 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         )
 
         # 执行优化
-        study = sys_id_algo.optimize(obs_real=obs_real, act_real=act_real, next_obs_real=next_obs_real, n_trials=self.optimize_n_trials, seed=self.seed_optimize)
+        study = sys_id_algo.optimize(
+            obs_real=obs_real, 
+            act_real=act_real, 
+            next_obs_real=next_obs_real,
+            n_trials=self.optimize_n_trials,
+            n_jobs=self.n_jobs,
+            seed=self.seed_optimize
+        )
 
         print(f"Best parameters found: {study.best_params}, best value: {study.best_value}")
 

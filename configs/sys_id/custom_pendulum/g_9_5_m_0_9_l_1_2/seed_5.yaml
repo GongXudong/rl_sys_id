@@ -1,4 +1,4 @@
-dynamics_env: 
+dynamics_env:
   id: CustomPendulum-v0
   params_config:
     g:
@@ -19,23 +19,23 @@ data_collected_from_real:
   next_obs_file_path: data/custom_pendulum/next_obs_real.npy
 bo_optimizer:
   n_trials: 30
-  seed: 112
-  threads: -1
+  seed: 23110569
+  n_jobs: -1
 sys_id_env:
-  reward_b: 1.0
-  max_steps: 10
+  reward_b: 0.2
+  max_steps: 20
   loss_threshold: 1e-10
 rl:
-  experiment_name: sys_id/custom_pendulum/sac/g_9_5_m_0_9_l_1_2/seed_1
-  seed: 3
-  seed_in_training_env: 7
-  seed_in_callback_env: 8
-  net_arch: [256, 256]
+  experiment_name: sys_id/custom_pendulum/sac/g_9_5_m_0_9_l_1_2/seed_5
+  seed: 44
+  seed_in_training_env: 46
+  seed_in_callback_env: 49
+  net_arch: [128, 128]
   gamma: 0.95
-  train_steps: !!float 1e4
-  batch_size: 256
-  buffer_size: !!float 1e4
-  learning_starts: 1024
+  train_steps: !!float 1e5
+  batch_size: 64
+  buffer_size: !!float 1e5
+  learning_starts: 100
   rollout_process_num: 1
   evaluate_process_num: 1
   callback_process_num: 1
@@ -43,7 +43,7 @@ rl:
   gradient_steps: 1
   target_update_interval: 100
   learning_rate: !!float 3e-4
-  eval_freq: !!float 1e2
-  n_eval_episodes: 16
-  save_checkpoint_every_n_timesteps: 10000
-  device: cpu
+  eval_freq: !!float 5e3
+  n_eval_episodes: 5
+  save_checkpoint_every_n_timesteps: 20000
+  device: cuda

@@ -25,7 +25,7 @@ class SystemIdentificationEnv(gym.Env):
         next_obs_real_file_path: str,
         bo_optimizer_n_trials: int = 1000,
         bo_optimizer_seed: int = 42,
-        bo_optimizer_threads: int = 4,
+        bo_optimizer_n_jobs: int = 4,
         reward_b: float = 1.0,
         max_steps: int = 30,
         loss_threshold: float = 1e-10,
@@ -82,7 +82,7 @@ class SystemIdentificationEnv(gym.Env):
         # Initialize the Bayesian optimizer
         self.bo_optimizer_n_trials = bo_optimizer_n_trials
         self.bo_optimizer_seed = bo_optimizer_seed
-        self.bo_optimizer_threads = bo_optimizer_threads
+        self.bo_optimizer_n_jobs = bo_optimizer_n_jobs
         self.bo_optimizer = SystemIdentificationWithOptuna(
             current_params=self.initial_params_all,
             params_config=self.params_config_to_be_optimized,
@@ -115,6 +115,7 @@ class SystemIdentificationEnv(gym.Env):
             act_real=self.act_real,
             next_obs_real=self.next_obs_real,
             n_trials=self.bo_optimizer_n_trials,
+            n_jobs=self.bo_optimizer_n_jobs,
             seed=self.bo_optimizer_seed,
             show_progress_bar=False,
         )

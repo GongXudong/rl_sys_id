@@ -43,7 +43,7 @@ class SystemIdentificationWithOptuna:
         next_obs_sim = np.array([self.helper_env_class.calc_next_obs(state=obs, action=act, helper_env=helper_env) for obs, act in zip(obs_real, act_real)])
         return np.mean((next_obs_sim - next_obs_real)**2)
 
-    def optimize(self, obs_real: np.ndarray, act_real: np.ndarray, next_obs_real: np.ndarray, n_trials: int=1000, seed: int=42, show_progress_bar: bool=False):
+    def optimize(self, obs_real: np.ndarray, act_real: np.ndarray, next_obs_real: np.ndarray, n_trials: int=1000, n_jobs: int=-1, seed: int=42, show_progress_bar: bool=False):
 
         def objective(trial):
             params = {k: trial.suggest_float(k, v["range"][0], v["range"][1]) for k, v in self.params_config.items()}
@@ -57,6 +57,6 @@ class SystemIdentificationWithOptuna:
             direction='minimize', 
             sampler=optuna.samplers.TPESampler(seed=seed)
         )
-        study.optimize(objective, n_trials=n_trials, n_jobs=-1, show_progress_bar=show_progress_bar)
+        study.optimize(objective, n_trials=n_trials, n_jobs=n_jobs, show_progress_bar=show_progress_bar)
 
         return study

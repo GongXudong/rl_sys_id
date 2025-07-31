@@ -54,6 +54,9 @@ class MultiBinaryToDiscreteWrapperTest(unittest.TestCase):
         print(self.wrapped_env._action_mapping)
         print(self.wrapped_env.action_space)
 
+        # for i in range(30):
+        #     print(self.wrapped_env.action_space.sample())
+
 
 if __name__ == "__main__":
     unittest.main()
