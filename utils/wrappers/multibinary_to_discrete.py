@@ -20,14 +20,14 @@ class MultiBinaryToDiscreteWrapper(gym.Wrapper):
         self.n = env.action_space.n
 
         # 计算可能的动作总数 (2^n)
-        self.num_actions = (2 **self.n) - 1
+        self.num_actions = (2 **self.n)
 
         # 定义新的Discrete动作空间
         self.action_space = spaces.Discrete(n=self.num_actions)
 
         # 预计算所有可能的二进制动作组合，加速转换
         self._action_mapping = []
-        for i in range(1, self.num_actions + 1):
+        for i in range(0, self.num_actions):
             # 将整数转换为二进制表示，长度为n，高位补0
             binary = np.array([(i >> k) & 1 for k in range(self.n-1, -1, -1)], dtype=np.int8)
             self._action_mapping.append(binary)

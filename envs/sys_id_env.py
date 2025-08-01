@@ -100,6 +100,22 @@ class SystemIdentificationEnv(gym.Env):
     def step(self, action):
         # Simulate the next state based on the current parameters and action
         
+        if np.sum(action) == 0:
+            next_state = self.to_obs(self.current_params_to_be_optimized)
+            cur_step_loss = self.loss_list[-1]
+            reward = self.compute_reward(current_step_loss=cur_step_loss)
+            self.step_cnt += 1
+            self.loss_list.append(cur_step_loss)
+            terminated, truncated, success = self.compute_terminated(cur_step_loss)
+            info = {
+                "params_before_optimize": deepcopy(self.current_params_to_be_optimized),
+                "params_selected_to_optimize": deepcopy({}),
+                "params_after_optimize": deepcopy(self.current_params_to_be_optimized),
+                "loss": cur_step_loss,
+                "success": True if success else False,
+            }
+            return next_state, reward, terminated, truncated, info
+
         # 1.构造要优化的配置dict
         params_to_be_optimized = self.get_params_to_be_optimized_from_action(self.params_config_to_be_optimized, action)
 

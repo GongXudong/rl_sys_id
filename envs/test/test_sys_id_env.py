@@ -62,7 +62,7 @@ class SystemIdentificationEnvTest(unittest.TestCase):
             obs_real_file_path=PROJECT_ROOT_DIR / "data/custom_cartpole/obs_real.npy",
             act_real_file_path=PROJECT_ROOT_DIR / "data/custom_cartpole/act_real.npy",
             next_obs_real_file_path=PROJECT_ROOT_DIR / "data/custom_cartpole/next_obs_real.npy",
-            bo_optimizer_n_trials=30,
+            bo_optimizer_n_trials=10,
             bo_optimizer_n_jobs=-1,
             reward_b=1.0,
             max_steps=30,
@@ -105,6 +105,7 @@ class SystemIdentificationEnvTest(unittest.TestCase):
         for i in range(35):
             step_start_time = time()
             action = self.env.action_space.sample()
+            # action = np.array([0,0,0,0,0])
             next_obs, reward, terminated, truncated, info = self.env.step(action)
             step_end_time = time()
             print(f"Step {i+1}:")
