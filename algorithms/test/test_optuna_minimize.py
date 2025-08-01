@@ -64,9 +64,9 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         self.policy_class = PPO
         self.policy_path = PROJECT_ROOT_DIR / "checkpoints/custom_pendulum/g_10_0_m_1_0_l_1_0/ppo/seed_1/best_model.zip"
         self.current_params = {
-            "g": 9.8,
-            "m": 0.8,
-            "l": 1.1,
+            "g": 10.0,
+            "m": 1.0,
+            "l": 1.0,
         }
         self.params_config = {
             "g": {
@@ -79,9 +79,9 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
                 "range": [0.7, 1.3],
             }
         }
-        self.optimize_n_trials = 100
+        self.optimize_n_trials = 1000
         self.n_jobs=16
-        self.seed_optimize = 333234
+        self.seed_optimize = 303411
     
     def setup_custom_cartpole(self):
         self.env_config_real = {
@@ -115,7 +115,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         }
         self.optimize_n_trials = 100
         self.n_jobs=-1
-        self.seed_optimize = 86003
+        self.seed_optimize = 86983
 
     def test_init_1(self):
         print(f"test init 2")

@@ -8,7 +8,7 @@ from stable_baselines3.ppo import PPO
 from stable_baselines3.sac import SAC
 from stable_baselines3.common.evaluation import evaluate_policy
 
-PROJECT_ROOT_DIR = Path(__file__).parent.parent
+PROJECT_ROOT_DIR = Path(__file__).parent.parent.parent
 
 if str(PROJECT_ROOT_DIR.absolute()) not in sys.path:
     sys.path.append(str(PROJECT_ROOT_DIR.absolute()))
@@ -45,8 +45,9 @@ def evaluate(algo_config: OmegaConf, env_config: OmegaConf, eval_conf: OmegaConf
 
     return res
 
-# python scripts_eval/evaluate.py algo=ppo algo_config=configs/custom_pendulum/g_10_0_m_1_0_l_1_0/ppo/seed_4.yaml env_config=configs/custom_pendulum/g_10_0_m_1_0_l_1_0/ppo/seed_4.yaml n_eval_episodes=5 visualize=true
-# python scripts_eval/evaluate.py algo=sac algo_config=configs/pendulum/sac/seed_1.yaml env_config=configs/pendulum/sac/seed_1.yaml n_eval_episodes=100 visualize=false
+# python scripts_eval/on_customized_envs/evaluate.py algo=ppo algo_config=configs/custom_cartpole/g_9_8_mc_1_0_mp_0_1_l_0_5_fm_10_0_tau_0_02/seed_1.yaml env_config=configs/custom_cartpole/g_9_8_mc_1_0_mp_0_1_l_0_5_fm_10_0_tau_0_02/seed_1.yaml n_eval_episodes=5 visualize=true
+# python scripts_eval/on_customized_envs/evaluate.py algo=sac algo_config=configs/custom_pendulum/g_10_0_m_1_0_l_1_0/sac/seed_1.yaml env_config=configs/custom_pendulum/g_10_0_m_1_0_l_1_0/sac/seed_1.yaml n_eval_episodes=5 visualize=true
+# python scripts_eval/on_customized_envs/evaluate.py algo=sac algo_config=configs/pendulum/sac/seed_1.yaml env_config=configs/pendulum/sac/seed_1.yaml n_eval_episodes=100 visualize=false
 if __name__ == "__main__":
     conf = OmegaConf.from_cli()
     

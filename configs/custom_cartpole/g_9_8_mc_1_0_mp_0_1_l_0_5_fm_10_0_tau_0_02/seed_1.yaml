@@ -9,7 +9,7 @@ env:
     force_mag: 10.0
     tau: 0.02
 algo:
-  experiment_name: custom_cartpole/ppo
+  experiment_name: custom_cartpole/ppo/g_9_8_mc_1_0_mp_0_1_l_0_5_fm_10_0_tau_0_02/seed_1
   seed: 3
   seed_in_training_env: 5
   seed_in_callback_env: 7

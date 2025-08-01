@@ -40,7 +40,6 @@ def train(config, wandb_run):
         act_real_file_path=PROJECT_ROOT_DIR / config["data_collected_from_real"]["act_file_path"],
         next_obs_real_file_path=PROJECT_ROOT_DIR / config["data_collected_from_real"]["next_obs_file_path"],
         bo_optimizer_n_trials=config["bo_optimizer"]["n_trials"],
-        bo_optimizer_seed=config["bo_optimizer"]["seed"],
         bo_optimizer_n_jobs=config["bo_optimizer"]["n_jobs"],
         reward_b=config["sys_id_env"]["reward_b"],
         max_steps=config["sys_id_env"]["max_steps"],
@@ -55,7 +54,6 @@ def train(config, wandb_run):
         act_real_file_path=PROJECT_ROOT_DIR / config["data_collected_from_real"]["act_file_path"],
         next_obs_real_file_path=PROJECT_ROOT_DIR / config["data_collected_from_real"]["next_obs_file_path"],
         bo_optimizer_n_trials=config["bo_optimizer"]["n_trials"],
-        bo_optimizer_seed=config["bo_optimizer"]["seed"],
         bo_optimizer_n_jobs=config["bo_optimizer"]["n_jobs"],
         reward_b=config["sys_id_env"]["reward_b"],
         max_steps=config["sys_id_env"]["max_steps"],
@@ -100,7 +98,7 @@ def train(config, wandb_run):
     )
 
     dqn_algo.learn(
-        total_timesteps=int(config["rl"]["train_steps"]), 
+        total_timesteps=int(config["rl"]["train_steps"]),
         callback=[
             eval_callback,
             WandbCallback(
@@ -117,7 +115,7 @@ def train(config, wandb_run):
     return sb3_logger, training_env, eval_env_in_callback
 
 
-# python scripts_train/on_sys_id_envs/train_with_dqn.py config_file=configs/sys_id/custom_pendulum/g_9_0_m_0_9_l_1_2/seed_1.yaml 
+# python scripts_train/on_sys_id_envs/train_with_dqn.py config_file=configs/sys_id/custom_pendulum/g_9_5_m_0_9_l_1_2/seed_1.yaml 
 if __name__ == "__main__":
 
     conf = OmegaConf.from_cli()
