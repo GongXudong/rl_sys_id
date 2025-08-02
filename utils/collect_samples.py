@@ -5,7 +5,14 @@ import gymnasium as gym
 from stable_baselines3.common.policies import BasePolicy
 
 
-def collect_samples(policy: BasePolicy, env: gym.Env, num_samples: int, deterministic: bool = True, seed: int = 0) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def collect_samples(
+    policy: BasePolicy, 
+    env: gym.Env, 
+    num_samples: int,
+    per_episode_samples: int = -1, 
+    deterministic: bool = True, 
+    seed: int = 0
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Collect samples from the environment using the given policy.
     
@@ -13,6 +20,7 @@ def collect_samples(policy: BasePolicy, env: gym.Env, num_samples: int, determin
         policy (BasePolicy): The policy to use for action selection.
         env (gym.Env): The environment to collect samples from.
         num_samples (int): The number of samples to collect.
+        per_episode_samples (int): The number of maximum sample to collect from one episode.
         deterministic (bool): Whether to use deterministic action selection.
     
     Returns:
@@ -25,7 +33,9 @@ def collect_samples(policy: BasePolicy, env: gym.Env, num_samples: int, determin
     next_observations = []
 
     obs, _ = env.reset(seed=seed)
-    
+    reset_cnt = 0
+    cur_episode_samples = 0
+
     for _ in range(num_samples):
         action, _ = policy.predict(obs, deterministic=deterministic)
         next_obs, reward, terminated, truncated, info = env.step(action)
@@ -35,8 +45,13 @@ def collect_samples(policy: BasePolicy, env: gym.Env, num_samples: int, determin
         next_observations.append(deepcopy(next_obs))
 
         obs = next_obs
+        cur_episode_samples += 1
         
-        if terminated or truncated:
+        if terminated or truncated or (per_episode_samples != -1 and cur_episode_samples >= per_episode_samples):
             obs, _ = env.reset()
+            reset_cnt += 1
+            cur_episode_samples = 0
+    
+    print(f"reset num: {reset_cnt}")
     
     return np.array(observations), np.array(actions), np.array(next_observations)

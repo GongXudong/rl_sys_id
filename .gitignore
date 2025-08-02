@@ -12,6 +12,7 @@ checkpoints/
 results/
 wandb/
 data/*/*.npy
+data/*/*/*.npy
 
 *.pyc
 *.pyo

@@ -25,6 +25,7 @@ class SystemIdentificationEnv(gym.Env):
         next_obs_real_file_path: str,
         bo_optimizer_n_trials: int = 1000,
         bo_optimizer_n_jobs: int = 4,
+        bo_optimizer_sample_num_in_optimize: int = 1000,
         reward_b: float = 1.0,
         max_steps: int = 30,
         loss_threshold: float = 1e-10,
@@ -70,6 +71,10 @@ class SystemIdentificationEnv(gym.Env):
         self.act_real = np.load(PROJECT_ROOT_DIR / act_real_file_path, allow_pickle=True)
         self.next_obs_real = np.load(PROJECT_ROOT_DIR / next_obs_real_file_path, allow_pickle=True)
 
+        self.obs_real_cur_episode: np.ndarray = None
+        self.act_real_cur_episode: np.ndarray = None
+        self.next_obs_real_cur_episode: np.ndarray = None
+
         # define observation and action spaces
         # 只把需要优化的参数作为observation以及action！！！
         tmp_low = np.array([self.params_config_all[ky]["range"][0] for ky in self.key_list_of_params_to_be_optimized])
@@ -81,11 +86,14 @@ class SystemIdentificationEnv(gym.Env):
         # Initialize the Bayesian optimizer
         self.bo_optimizer_n_trials = bo_optimizer_n_trials
         self.bo_optimizer_n_jobs = bo_optimizer_n_jobs
+        self.bo_optimizer_sample_num_in_optimize = bo_optimizer_sample_num_in_optimize
         self.bo_optimizer = SystemIdentificationWithOptuna(
             current_params=self.initial_params_all,
             params_config=self.params_config_to_be_optimized,
             helper_env_class=self.helper_env_class,
         )
+
+        assert len(self.act_real) > self.bo_optimizer_sample_num_in_optimize, f"bo_optimizer_sample_num_in_optimize: {self.bo_optimizer_sample_num_in_optimize} must be smaller than obs/act/next_obs num: {len(self.act_real)}!"
 
         # env config
         self.reward_b = reward_b
@@ -125,9 +133,9 @@ class SystemIdentificationEnv(gym.Env):
         self.bo_optimizer.params_config = params_to_be_optimized
 
         study: optuna.Study = self.bo_optimizer.optimize(
-            obs_real=self.obs_real,
-            act_real=self.act_real,
-            next_obs_real=self.next_obs_real,
+            obs_real=self.obs_real_cur_episode,
+            act_real=self.act_real_cur_episode,
+            next_obs_real=self.next_obs_real_cur_episode,
             n_trials=self.bo_optimizer_n_trials,
             n_jobs=self.bo_optimizer_n_jobs,
             seed=self.np_random.integers(0, 1000000000),
@@ -167,14 +175,19 @@ class SystemIdentificationEnv(gym.Env):
 
         self.step_cnt = 0
         self.loss_list = []
+
+        sample_indexes = self.np_random.choice(len(self.act_real), self.bo_optimizer_sample_num_in_optimize, replace=False)
+        self.obs_real_cur_episode = self.obs_real[sample_indexes]
+        self.act_real_cur_episode = self.act_real[sample_indexes]
+        self.next_obs_real_cur_episode = self.next_obs_real[sample_indexes]
         
         self.current_params_to_be_optimized = deepcopy(self.initial_params_to_be_optimized)
 
         initial_loss = self.bo_optimizer.calc_loss(
             current_params=self.initial_params_all,
-            obs_real=self.obs_real,
-            act_real=self.act_real,
-            next_obs_real=self.next_obs_real,
+            obs_real=self.obs_real_cur_episode,
+            act_real=self.act_real_cur_episode,
+            next_obs_real=self.next_obs_real_cur_episode,
         )
         self.loss_list.append(initial_loss)
 

@@ -49,6 +49,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             }
         }
         self.optimize_n_trials = 100
+        self.per_episode_samples = 100
         self.n_jobs=-1
         self.seed_optimize = 33
     
@@ -79,9 +80,10 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
                 "range": [0.7, 1.3],
             }
         }
-        self.optimize_n_trials = 1000
-        self.n_jobs=16
-        self.seed_optimize = 303411
+        self.optimize_n_trials = 30
+        self.per_episode_samples = 100
+        self.n_jobs=-1
+        self.seed_optimize = 2903
     
     def setup_custom_cartpole(self):
         self.env_config_real = {
@@ -114,6 +116,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             },
         }
         self.optimize_n_trials = 100
+        self.per_episode_samples = 100
         self.n_jobs=-1
         self.seed_optimize = 86983
 
@@ -160,6 +163,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             policy=algo.policy,
             env=env_real,
             num_samples=self.collect_real_sample_num,
+            per_episode_samples=self.per_episode_samples,
             deterministic=True,
         )
 
@@ -190,6 +194,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
             policy=algo.policy,
             env=env_real,
             num_samples=self.collect_real_sample_num,
+            per_episode_samples=self.per_episode_samples,
             deterministic=True,
         )
 
