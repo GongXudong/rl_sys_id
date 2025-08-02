@@ -62,6 +62,7 @@ class CustomPendulumTest(unittest.TestCase):
         }
 
         env = CustomPendulumEnv.get_env_from_config(config=custom_config)
+        print(env)
 
         self.assertEqual(env.unwrapped.g, custom_config["g"], f"g not equal: {env.unwrapped.g}, {custom_config['g']}")
         self.assertEqual(env.unwrapped.m, custom_config["m"], f"m not equal: {env.unwrapped.m}, {custom_config['m']}")

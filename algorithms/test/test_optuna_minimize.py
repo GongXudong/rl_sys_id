@@ -131,7 +131,7 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         env_real = gym.make(self.env_id, **self.env_config_real)
         helper_env = algo.helper_env_class.get_env_from_config(config=env_real.unwrapped.get_config())
 
-        self.assertDictEqual(env_real.unwrapped.get_config(), helper_env.get_config(), "Environment configuration does not match helper environment configuration.")
+        self.assertDictEqual(env_real.unwrapped.get_config(), helper_env.unwrapped.get_config(), "Environment configuration does not match helper environment configuration.")
 
         obs, info = env_real.reset()
 

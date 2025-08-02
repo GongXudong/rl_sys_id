@@ -23,6 +23,13 @@ class EnvConfigMixin:
         """
         raise NotImplementedError("Subclasses should implement this method.")
     
+    @staticmethod
+    def get_env_id() -> str:
+        """
+        Returns the id of the environment.
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
     @classmethod
     def get_env_from_config(cls, *args, config: dict, **kwargs) -> gym.Env:
         """
@@ -95,6 +102,9 @@ class ConfigurableEnv(Protocol):
     def get_config(self) -> dict: ...
     def set_config(self, config: dict): ...
     
+    @staticmethod
+    def get_env_id() -> str: ...
+
     @classmethod
     def get_env_from_config(cls, *args, config: dict, **kwargs) -> gym.Env: ...
 

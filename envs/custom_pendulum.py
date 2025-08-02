@@ -30,9 +30,17 @@ class CustomPendulumEnv(PendulumEnv, EnvConfigMixin, DynamicsMixin):
         self.m = config.get("m", 1.0)
         self.l = config.get("l", 1.0)
 
+    @staticmethod
+    def get_env_id() -> str:
+        return "CustomPendulum-v0"
+
     @classmethod
     def get_env_from_config(cls, *args, config, **kwargs):
-        return cls(*args, **config, **kwargs)
+        # return cls(*args, **config, **kwargs)
+
+        # gymnasium中的Pendulum原始环境，不判断terminated和truncated！！！
+        # 其通过gym.make初始化的时候添加TimeLimit Wrapper，该wrapper负责truncate！！！ 
+        return gym.make(cls.get_env_id(), **config, **kwargs)
 
     @staticmethod
     def get_default_config() -> dict:

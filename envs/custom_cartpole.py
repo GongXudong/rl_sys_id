@@ -39,9 +39,14 @@ class CustomCartPoleEnv(CartPoleEnv, EnvConfigMixin, DynamicsMixin):
         self.total_mass = self.masspole + self.masscart
         self.polemass_length = self.masspole * self.length
 
+    @staticmethod
+    def get_env_id() -> str:
+        return "CustomCartPole-v0"
+
     @classmethod
-    def get_env_from_config(cls, *args, config, **kwargs):
-        return cls(*args, **config, **kwargs)
+    def get_env_from_config(cls, *args, config, **kwargs) -> gym.Env:
+        # return cls(*args, **config, **kwargs)
+        return gym.make(cls.get_env_id(), **config, **kwargs)
 
     @staticmethod
     def get_default_config() -> dict:

@@ -23,9 +23,14 @@ class CustomContinuousMountainCarEnv(Continuous_MountainCarEnv, EnvConfigMixin, 
     def set_config(self, config: dict):
         self.power = config.get("power", 0.0015)
 
+    @staticmethod
+    def get_env_id() -> str:
+        return "CustomMountainCarContinuous-v0"
+
     @classmethod
     def get_env_from_config(cls, *args, config, **kwargs):
-        return cls(*args, **config, **kwargs)
+        # return cls(*args, **config, **kwargs)
+        return gym.make(cls.get_env_id(), **config, **kwargs)
 
     @staticmethod
     def get_default_config() -> dict:

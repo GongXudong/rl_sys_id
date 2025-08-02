@@ -26,10 +26,10 @@ sys_id_env:
   max_steps: 10
   loss_threshold: 1e-10
 rl:
-  experiment_name: sys_id/custom_pendulum/sac/g_9_5_m_0_9_l_1_2/seed_23
-  seed: 222
-  seed_in_training_env: 225
-  seed_in_callback_env: 229
+  experiment_name: sys_id/custom_pendulum/sac/g_9_5_m_0_9_l_1_2/bo_opt_step_30/seed_22
+  seed: 213
+  seed_in_training_env: 214
+  seed_in_callback_env: 216
   net_arch: [128, 128]
   gamma: 0.95
   train_steps: !!float 1e5

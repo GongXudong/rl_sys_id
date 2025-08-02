@@ -20,15 +20,16 @@ data_collected_from_real:
 bo_optimizer:
   n_trials: 30
   n_jobs: -1
+  sample_num_in_optimize: 1000
 sys_id_env:
   reward_b: 0.2
-  max_steps: 20
+  max_steps: 10
   loss_threshold: 1e-10
 rl:
-  experiment_name: sys_id/custom_pendulum/sac/g_9_5_m_0_9_l_1_2/seed_4
-  seed: 31
-  seed_in_training_env: 33
-  seed_in_callback_env: 35
+  experiment_name: sys_id/custom_pendulum/sac/g_9_5_m_0_9_l_1_2/bo_opt_step_30/seed_19
+  seed: 182
+  seed_in_training_env: 184
+  seed_in_callback_env: 186
   net_arch: [128, 128]
   gamma: 0.95
   train_steps: !!float 1e5
@@ -43,6 +44,6 @@ rl:
   target_update_interval: 100
   learning_rate: !!float 3e-4
   eval_freq: !!float 1e3
-  n_eval_episodes: 5
+  n_eval_episodes: 10
   save_checkpoint_every_n_timesteps: 20000
   device: cuda
