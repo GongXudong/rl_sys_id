@@ -28,8 +28,8 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         super().setUp()
 
         # self.setup_custom_mountain_car()
-        self.setup_custom_pendulum()
-        # self.setup_custom_cartpole()
+        # self.setup_custom_pendulum()
+        self.setup_custom_cartpole()
     
     def setup_custom_mountain_car(self):
         self.env_config_real = {
@@ -88,9 +88,9 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
     def setup_custom_cartpole(self):
         self.env_config_real = {
             "gravity": 9.8,
-            "masscart": 1.5,
-            "masspole": 0.05,
-            "length": 0.5,
+            "masscart": 1.1,
+            "masspole": 0.09,
+            "length": 0.55,
             "force_mag": 10.0,
             "tau": 0.02,
         }
@@ -101,24 +101,27 @@ class SystemIdentificationWithOptunaTest(unittest.TestCase):
         self.policy_path = PROJECT_ROOT_DIR / "checkpoints/custom_cartpole/ppo/best_model.zip"
         self.current_params = {
             "gravity": 9.8,
-            "masscart": 1.5,
-            "masspole": 0.098,
+            "masscart": 1.0,
+            "masspole": 0.1,
             "length": 0.5,
             "force_mag": 10.0,
             "tau": 0.02,
         }
         self.params_config = {
-            # "masscart": {
-            #     "range": [0.5, 1.5],
-            # },
+            "masscart": {
+                "range": [0.8, 1.2],
+            },
             "masspole": {
-                "range": [0.05, 0.15],
+                "range": [0.08, 0.12],
+            },
+            "length": {
+                "range": [0.4, 0.6],
             },
         }
-        self.optimize_n_trials = 100
-        self.per_episode_samples = 100
+        self.optimize_n_trials = 200
+        self.per_episode_samples = -1
         self.n_jobs=-1
-        self.seed_optimize = 86983
+        self.seed_optimize = 55393
 
     def test_init_1(self):
         print(f"test init 2")

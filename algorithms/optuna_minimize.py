@@ -28,7 +28,6 @@ class SystemIdentificationWithOptuna:
             params_config (dict): system parameters configurations, form: {
                 'param1': {
                     'range': [1, 10],
-                    'search_num': 10,  # 将range多少等分
                 },
                 'param2': {}
             }
